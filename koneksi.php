@@ -1,6 +1,6 @@
 <?php
 
-$koneksi = mysqli_connect("localhost", "root", "", "penjualan");
+$koneksi = mysqli_connect("127.0.0.01", "root", "", "penjualan");
 
 // Check connection
 if (mysqli_connect_errno()) {
