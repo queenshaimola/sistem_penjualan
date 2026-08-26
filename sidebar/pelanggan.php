@@ -9,8 +9,8 @@
                 <h5 class="fw-bold text-dark mb-0">Data Pelanggan</h5>
                 <small class="text-muted">Kelola daftar seluruh pelanggan sistem penjualan</small>
             </div>
-            <a href="pelanggan_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
-                <i class="bi bi-plus-lg me-1"></i> Tambah Pelanggan
+            <a href="pelanggan_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm" >
+                <i class="bi bi-plus-lg me-1"></i> Tambah Pelanggan 
             </a>
         </div>
 
