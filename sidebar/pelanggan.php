@@ -1,4 +1,8 @@
-<?php include '../header.php'; ?>
+<?php 
+include '../koneksi.php';
+include '../header.php';
+include '../sidebar.php';
+?>
 
 <div class="container-fluid px-4 py-2">
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">

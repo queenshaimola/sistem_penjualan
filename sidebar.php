@@ -1,5 +1,4 @@
 <?php
-// Dapatkan nama file yang sedang dibuka secara otomatis (misal: pelanggan.php)
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 
@@ -13,18 +12,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
     /* Efek saat kursor menempel / dipencet (Kotak Biru Transparan Soft + Animasi Geser) */
     .custom-nav-link:hover {
-        background-color: rgba(13, 110, 253, 0.08) !important;
+        background-color: rgba(127, 176, 251, 0.25);
         /* Transparan soft */
-        color: #7ea8e8 !important;
+        color: #6180ad;
         transform: translateX(4px);
         /* Animasi geser ke kanan 4px */
     }
 
     /* Style saat menu Aktif (Halaman yang dibuka) */
     .custom-nav-link.active {
-        background-color: #5d7aa5 !important;
-        color: #ffffff !important;
-        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.25);
+        background-color: #436dc0 !important;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(11, 67, 151, 0.25);
         /* Bayangan soft */
     }
 </style>
@@ -32,24 +31,24 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <div class="offcanvas offcanvas-start bg-white border-end shadow-sm" tabindex="-1" id="sidebarMenu" style="width: 270px;">
 
     <!-- Header Sidebar -->
-    <div class="offcanvas-header border-bottom py-3 px-4">
-        <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2 mb-0" style="color: #1e293b;">
-            <i class="bi bi-shop fs-4" style="color: #7ea8e8;"></i> Sistem Penjualan
+    <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold">
+            <i class="bi bi-shop text-primary me-2"></i>Sistem Penjualan
         </h5>
-
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
+
 
     <!-- Isi Menu Sidebar -->
     <div class="offcanvas-body d-flex flex-column p-3">
         <ul class="nav nav-pills flex-column mb-auto gap-1">
-            <li class="nav-item">
-                <a href="/dashboard.php" class="nav-link custom-nav-link fw-semibold px-3 py-2 <?= ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
+            <li>
+                <a href="../dashboard.php" class="nav-link custom-nav-link fw-semibold <?= ($current_page == 'dashboard.php') ? 'active' : ''; ?>">
                     <i class="bi bi-speedometer2 me-2"></i> Dashboard
                 </a>
             </li>
             <li>
-                <a href="/sidebar/pelanggan.php" class="nav-link custom-nav-link fw-semibold px-3 py-2 <?= ($current_page == 'pelanggan.php') ? 'active' : ''; ?>">
+                <a href="/sidebar/pelanggan.php" class="nav-link custom-nav-link fw-semibold <?= ($current_page == 'pelanggan.php') ? 'active' : ''; ?>">
                     <i class="bi bi-people me-2"></i> Pelanggan
                 </a>
             </li>
