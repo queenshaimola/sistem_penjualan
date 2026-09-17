@@ -41,3 +41,8 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login") {
                     </div>
                 </div>
             </nav>
+        </div>
+    </div>
+    <script src="/assets/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

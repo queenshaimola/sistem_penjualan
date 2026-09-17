@@ -1,17 +1,16 @@
 <?php 
-include 'header.php'; 
-include 'koneksi.php' ;
-
-// Jika file koneksi database kamu belum ada di dalam header.php, 
-// buka baris di bawah ini dan sesuaikan nama filenya (misal: koneksi.php):
-// include 'koneksi.php'; 
+include 'koneksi.php';
 
 // Query untuk menghitung jumlah baris di masing-masing tabel
 $count_produk    = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM produk"));
 $count_pelanggan = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM pelanggan"));
 $count_penjualan = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM penjualan"));
 $count_user      = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM user"));
+
+include 'header.php'; 
+include 'sidebar.php';
 ?>
+
 
 <div class="container-fluid px-4 py-4">
 
@@ -118,5 +117,3 @@ $count_user      = mysqli_num_rows(mysqli_query($koneksi, "SELECT * FROM user"))
     </div>
 
 </div>
-
-<?php include 'footer.php'; ?>

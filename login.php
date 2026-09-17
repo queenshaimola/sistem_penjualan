@@ -10,8 +10,6 @@ $cek   = mysqli_num_rows($login);
 
 if ($cek > 0) {
     $data = mysqli_fetch_assoc($login);
-
-    // SIMPAN DATA KEDALAM SESSION
     $_SESSION['username'] = $data['username'];
     $_SESSION['nama_user'] = $data['nama_user'];
     $_SESSION['status']   = "login";
