@@ -2,7 +2,10 @@
 include '../koneksi.php';
 include '../header.php';
 include '../sidebar.php';
+
+/** @var mysqli $koneksi */
 ?>
+
 
 <div class="container-fluid px-4 py-2">
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
@@ -13,7 +16,7 @@ include '../sidebar.php';
                 <h5 class="fw-bold text-dark mb-0">Data Pelanggan</h5>
                 <small class="text-muted">Kelola daftar seluruh pelanggan sistem penjualan</small>
             </div>
-            <a href="pelanggan_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm" >
+            <a href="pelanggan_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
                 <i class="bi bi-plus-lg me-1"></i> Tambah Pelanggan 
             </a>
         </div>
@@ -28,12 +31,12 @@ include '../sidebar.php';
                             <th class="py-3">Nama</th>
                             <th class="py-3">HP</th>
                             <th class="py-3">Alamat</th>
+                            <th class="text-center py-3">Status</th> <!-- Ditambahkan -->
                             <th class="text-center py-3" width="18%">Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        include __DIR__ . '/../koneksi.php';
                         $data = mysqli_query($koneksi, "SELECT * FROM pelanggan ORDER BY pelangganID DESC");
                         $no = 1;
                         if (mysqli_num_rows($data) > 0) {
@@ -44,6 +47,16 @@ include '../sidebar.php';
                                 <td class="fw-semibold text-dark"><?= htmlspecialchars($d['nama_pelanggan'] ?? '-'); ?></td>
                                 <td class="text-secondary"><?= htmlspecialchars($d['nomor_telepon'] ?? '-'); ?></td>
                                 <td class="text-secondary"><?= htmlspecialchars($d['alamat'] ?? '-'); ?></td>
+                                
+                                <!-- Kolom Status Ditambahkan -->
+                                <td class="text-center">
+                                    <?php if ($d['status'] == 1 || $d['status'] == 'Aktif'): ?>
+                                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">Aktif</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary-subtle text-secondary px-3 py-2 rounded-pill">Tidak Aktif</span>
+                                    <?php endif; ?>
+                                </td>
+
                                 <td class="text-center">
                                     <a href="pelanggan_edit.php?id=<?= $d['pelangganID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
                                         <i class="bi bi-pencil-square me-1"></i>Edit
@@ -56,7 +69,7 @@ include '../sidebar.php';
                         <?php 
                             }
                         } else {
-                            echo '<tr><td colspan="5" class="text-center py-4 text-muted">Belum ada data pelanggan.</td></tr>';
+                            echo '<tr><td colspan="6" class="text-center py-4 text-muted">Belum ada data pelanggan.</td></tr>';
                         }
                         ?>
                     </tbody>
