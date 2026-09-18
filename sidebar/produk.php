@@ -9,7 +9,7 @@
                 <h5 class="fw-bold text-dark mb-0">Data Produk</h5>
                 <small class="text-muted">Kelola daftar produk dan stok barang penjualan</small>
             </div>
-            <a href="../produk_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
+            <a href="produk_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
                 <i class="bi bi-plus-lg me-1"></i> Tambah Produk
             </a>
         </div>
@@ -49,10 +49,10 @@
                                     </span>
                                 </td>
                                 <td class="text-center">
-                                    <a href="../produk_edit.php?id=<?= $d['produkID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
+                                    <a href="produk_edit.php?id=<?= $d['produkID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
                                         <i class="bi bi-pencil-square me-1"></i>Edit
                                     </a>
-                                    <a href="../produk_hapus.php?id=<?= $d['produkID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus produk ini?')">
+                                    <a href="produk_hapus.php?id=<?= $d['produkID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus produk ini?')">
                                         <i class="bi bi-trash me-1"></i>Hapus
                                     </a>
                                 </td>
