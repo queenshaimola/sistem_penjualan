@@ -1,4 +1,5 @@
 <?php
+
 include '../koneksi.php';
 include '../header.php';
 include '../sidebar.php';
@@ -30,12 +31,25 @@ if (isset($_POST['update'])) {
     // -------------------------------------------------------------
     // VALIDASI SISI SERVER (PHP)
     // -------------------------------------------------------------
+    
+    // 1. Validasi Format & Panjang Nomor Telepon
     if (!ctype_digit($telepon)) {
         $error = "Nomor telepon hanya boleh berisi angka!";
     } elseif (strlen($telepon) > 13) {
         $error = "Nomor telepon tidak boleh lebih dari 13 digit!";
     } elseif (strlen($telepon) < 10) {
         $error = "Nomor telepon terlalu pendek (minimal 10 digit)!";
+    } else {
+        // 2. Cek Apakah Nomor Telepon Digunakan Oleh Pelanggan Lain
+        $stmt_cek = mysqli_prepare($koneksi, "SELECT pelangganID FROM pelanggan WHERE nomor_telepon = ? AND pelangganID != ?");
+        mysqli_stmt_bind_param($stmt_cek, "ss", $telepon, $id);
+        mysqli_stmt_execute($stmt_cek);
+        mysqli_stmt_store_result($stmt_cek);
+
+        if (mysqli_stmt_num_rows($stmt_cek) > 0) {
+            $error = "Nomor telepon <strong>" . htmlspecialchars($telepon) . "</strong> sudah digunakan oleh pelanggan lain!";
+        }
+        mysqli_stmt_close($stmt_cek);
     }
 
     // Jika tidak ada error, eksekusi query update
@@ -52,6 +66,12 @@ if (isset($_POST['update'])) {
         }
     }
 }
+
+// Menentukan nilai input (menggunakan data dari POST jika ada error, atau data dari DB)
+$val_nama    = isset($_POST['nama_pelanggan']) ? $_POST['nama_pelanggan'] : $d['nama_pelanggan'];
+$val_alamat  = isset($_POST['alamat']) ? $_POST['alamat'] : $d['alamat'];
+$val_telepon = isset($_POST['nomor_telepon']) ? $_POST['nomor_telepon'] : $d['nomor_telepon'];
+$val_status  = isset($_POST['status']) ? $_POST['status'] : $d['status'];
 ?>
 
 <div class="container-fluid px-4 py-4 d-flex justify-content-center align-items-center" style="min-height: 80vh;">
@@ -62,7 +82,7 @@ if (isset($_POST['update'])) {
 
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger mb-3 alert-dismissible fade show" role="alert">
-                        <?= htmlspecialchars($error) ?>
+                        <?= $error ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
@@ -70,24 +90,24 @@ if (isset($_POST['update'])) {
                 <form method="POST">
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Nama Pelanggan</label>
-                        <input type="text" name="nama_pelanggan" class="form-control" value="<?= htmlspecialchars($d['nama_pelanggan']); ?>" placeholder="Masukkan nama..." required>
+                        <input type="text" name="nama_pelanggan" class="form-control" value="<?= htmlspecialchars($val_nama); ?>" placeholder="Masukkan nama..." required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Alamat</label>
-                        <textarea name="alamat" class="form-control" rows="3" placeholder="Masukkan alamat..." required><?= htmlspecialchars($d['alamat']); ?></textarea>
+                        <textarea name="alamat" class="form-control" rows="3" placeholder="Masukkan alamat..." required><?= htmlspecialchars($val_alamat); ?></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Nomor Telepon <small class="text-muted">(Maks. 13 digit)</small></label>
-                        <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control" value="<?= htmlspecialchars($d['nomor_telepon']); ?>" placeholder="08xxxxxxxxxx" maxlength="13" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                        <label class="form-label fw-semibold">Nomor Telepon <small class="text-muted">(10-13 digit)</small></label>
+                        <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control" value="<?= htmlspecialchars($val_telepon); ?>" placeholder="08xxxxxxxxxx" maxlength="13" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Status</label>
                         <select name="status" class="form-select" required>
-                            <option value="1" <?= ($d['status'] == 1 || $d['status'] == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
-                            <option value="0" <?= ($d['status'] == 0 || $d['status'] == 'Tidak Aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
+                            <option value="1" <?= ($val_status == 1 || $val_status == 'Aktif') ? 'selected' : ''; ?>>Aktif</option>
+                            <option value="0" <?= ($val_status == 0 || $val_status == 'Tidak Aktif') ? 'selected' : ''; ?>>Tidak Aktif</option>
                         </select>
                     </div>
 

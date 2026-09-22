@@ -18,13 +18,24 @@ if (isset($_POST['simpan'])) {
     // VALIDASI SISI SERVER (PHP)
     // -------------------------------------------------------------
     
-    // 1. Validasi Angka & Maksimal 13 Digit
+    // 1. Validasi Format & Panjang Nomor Telepon
     if (!ctype_digit($telepon)) {
         $error = "Nomor telepon hanya boleh berisi angka!";
     } elseif (strlen($telepon) > 13) {
         $error = "Nomor telepon tidak boleh lebih dari 13 digit!";
     } elseif (strlen($telepon) < 10) {
         $error = "Nomor telepon terlalu pendek (minimal 10 digit)!";
+    } else {
+        // 2. Cek Apakah Nomor Telepon Sudah Terdaftar (Cegah Duplikasi)
+        $stmt_cek = mysqli_prepare($koneksi, "SELECT pelangganID FROM pelanggan WHERE nomor_telepon = ?");
+        mysqli_stmt_bind_param($stmt_cek, "s", $telepon);
+        mysqli_stmt_execute($stmt_cek);
+        mysqli_stmt_store_result($stmt_cek);
+
+        if (mysqli_stmt_num_rows($stmt_cek) > 0) {
+            $error = "Nomor telepon <strong>" . htmlspecialchars($telepon) . "</strong> sudah terdaftar pada pelanggan lain!";
+        }
+        mysqli_stmt_close($stmt_cek);
     }
 
     // Jika tidak ada error validasi, jalankan simpan data
@@ -52,7 +63,7 @@ if (isset($_POST['simpan'])) {
 
                 <?php if (!empty($error)): ?>
                     <div class="alert alert-danger mb-3 alert-dismissible fade show" role="alert">
-                        <?= htmlspecialchars($error) ?>
+                        <?= $error ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 <?php endif; ?>
@@ -69,7 +80,7 @@ if (isset($_POST['simpan'])) {
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Nomor Telepon</label>
+                        <label class="form-label fw-semibold">Nomor Telepon <small class="text-muted">(10-13 digit)</small></label>
                         <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control" placeholder="08xxxxxxxxxx" maxlength="13" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<?= isset($_POST['nomor_telepon']) ? htmlspecialchars($_POST['nomor_telepon']) : ''; ?>" required>
                     </div>
 

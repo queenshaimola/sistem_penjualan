@@ -67,8 +67,8 @@ if (!$penjualan) {
 
     <!-- Header Struk -->
     <div class="text-center">
-        <h2 class="bold" style="font-size: 15px; margin: 0;">SERBA ADA MART</h2>
-        <p style="margin: 2px 0;">Jl. Raya Penjualan No. 123</p>
+        <h2 class="bold" style="font-size: 15px; margin: 0;">OLA MINIMARKET CIHUY 6767</h2>
+        <p style="margin: 2px 0;">Jl. Raya Six Seven No. 67</p>
         <p style="margin: 2px 0;">Telp: 0812-3456-7890</p>
     </div>
 
