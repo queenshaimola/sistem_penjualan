@@ -25,7 +25,7 @@
                             <th class="py-3">Tanggal</th>
                             <th class="py-3">Pelanggan</th>
                             <th class="py-3">Total Harga</th>
-                            <th class="text-center py-3" width="18%">Opsi</th>
+                            <th class="text-center py-3" width="20%">Opsi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,13 +59,17 @@
                                     <td class="fw-semibold text-success">
                                         Rp <?= number_format($d['total_harga'] ?? 0, 0, ',', '.'); ?>
                                     </td>
-                                    <td class="text-center">
-                                        <a href="penjualan_detail.php?id=<?= $d['penjualanID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
-                                            <i class="bi bi-eye me-1"></i>Detail
-                                        </a>
-                                        <a href="penjualan_hapus.php?id=<?= $d['penjualanID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus data transaksi ini?')">
-                                            <i class="bi bi-trash me-1"></i>Hapus
-                                        </a>
+                                    
+                                    <!-- Aksi Dibuat Sebelahan / Flexbox -->
+                                    <td class="text-center text-nowrap">
+                                        <div class="d-inline-flex align-items-center gap-1">
+                                            <a href="penjualan_detail.php?id=<?= $d['penjualanID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 shadow-sm">
+                                                <i class="bi bi-eye me-1"></i>Detail
+                                            </a>
+                                            <a href="penjualan_hapus.php?id=<?= $d['penjualanID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus data transaksi ini?')">
+                                                <i class="bi bi-trash me-1"></i>Hapus
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                         <?php
