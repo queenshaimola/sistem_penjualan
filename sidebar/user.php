@@ -9,7 +9,7 @@
                 <h5 class="fw-bold text-dark mb-0">Data Pengguna</h5>
                 <small class="text-muted">Kelola akun dan hak akses pengguna sistem</small>
             </div>
-            <a href="../user_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
+            <a href="user_tambah.php" class="btn btn-primary btn-sm px-3 py-2 rounded-3 fw-semibold shadow-sm">
                 <i class="bi bi-plus-lg me-1"></i> Tambah Pengguna
             </a>
         </div>
@@ -52,10 +52,10 @@
                                     ?>
                                 </td>
                                 <td class="text-center">
-                                    <a href="../user_edit.php?id=<?= $d['userID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
+                                    <a href="user_edit.php?id=<?= $d['userID']; ?>" class="btn btn-sm btn-light text-primary border rounded-2 px-3 py-1 me-1 shadow-sm">
                                         <i class="bi bi-pencil-square me-1"></i>Edit
                                     </a>
-                                    <a href="../user_hapus.php?id=<?= $d['userID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus pengguna ini?')">
+                                    <a href="user_hapus.php?id=<?= $d['userID']; ?>" class="btn btn-sm btn-light text-danger border rounded-2 px-3 py-1 shadow-sm" onclick="return confirm('Yakin ingin menghapus pengguna ini?')">
                                         <i class="bi bi-trash me-1"></i>Hapus
                                     </a>
                                 </td>
