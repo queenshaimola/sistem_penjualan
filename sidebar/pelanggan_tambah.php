@@ -12,7 +12,8 @@ if (isset($_POST['simpan'])) {
     $nama    = trim($_POST['nama_pelanggan']);
     $alamat  = trim($_POST['alamat']);
     $telepon = trim($_POST['nomor_telepon']);
-    $status  = trim($_POST['status']);
+    // Status otomatis 1 (Aktif) untuk pelanggan baru
+    $status  = 1; 
 
     // -------------------------------------------------------------
     // VALIDASI SISI SERVER (PHP)
@@ -26,7 +27,7 @@ if (isset($_POST['simpan'])) {
     } elseif (strlen($telepon) < 10) {
         $error = "Nomor telepon terlalu pendek (minimal 10 digit)!";
     } else {
-        // 2. Cek Apakah Nomor Telepon Sudah Terdaftar (Cegah Duplikasi)
+        // 2. Cek Apakah Nomor Telepon Sudah Terdaftar
         $stmt_cek = mysqli_prepare($koneksi, "SELECT pelangganID FROM pelanggan WHERE nomor_telepon = ?");
         mysqli_stmt_bind_param($stmt_cek, "s", $telepon);
         mysqli_stmt_execute($stmt_cek);
@@ -40,9 +41,8 @@ if (isset($_POST['simpan'])) {
 
     // Jika tidak ada error validasi, jalankan simpan data
     if (empty($error)) {
-        // Menggunakan Prepared Statement agar aman dari SQL Injection
         $stmt = mysqli_prepare($koneksi, "INSERT INTO pelanggan (nama_pelanggan, alamat, nomor_telepon, status) VALUES (?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "ssss", $nama, $alamat, $telepon, $status);
+        mysqli_stmt_bind_param($stmt, "sssi", $nama, $alamat, $telepon, $status);
 
         if (mysqli_stmt_execute($stmt)) {
             mysqli_stmt_close($stmt);
@@ -84,12 +84,13 @@ if (isset($_POST['simpan'])) {
                         <input type="tel" name="nomor_telepon" id="nomor_telepon" class="form-control" placeholder="08xxxxxxxxxx" maxlength="13" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '');" value="<?= isset($_POST['nomor_telepon']) ? htmlspecialchars($_POST['nomor_telepon']) : ''; ?>" required>
                     </div>
 
+                    <!-- Status Otomatis & Dikunci -->
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Status</label>
-                        <select name="status" class="form-select" required>
-                            <option value="1" <?= (isset($_POST['status']) && $_POST['status'] == '1') ? 'selected' : ''; ?>>Aktif</option>
-                            <option value="0" <?= (isset($_POST['status']) && $_POST['status'] == '0') ? 'selected' : ''; ?>>Tidak Aktif</option>
+                        <label class="form-label fw-semibold">Status <small class="text-muted">(Otomatis System)</small></label>
+                        <select class="form-select bg-light" disabled>
+                            <option value="1" selected>Aktif</option>
                         </select>
+                        <small class="text-muted d-block mt-1">*Pelanggan baru otomatis berstatus Aktif.</small>
                     </div>
 
                     <div class="d-flex gap-2 justify-content-end mt-4">

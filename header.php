@@ -1,8 +1,15 @@
 <?php 
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-if (!isset($_SESSION['status']) || $_SESSION['status'] != "login") {
-    header("location:index.php?pesan=belum_login");
+// Cek apakah user sudah login
+if (!isset($_SESSION['status']) || $_SESSION['status'] !== "login") {
+    // Tentukan jalur ke index.php secara dinamis berdasarkan posisi folder
+    $in_sidebar_folder = (basename(dirname($_SERVER['SCRIPT_NAME'])) === 'sidebar');
+    $login_path        = $in_sidebar_folder ? '../index.php' : 'index.php';
+
+    header("Location: " . $login_path . "?pesan=belum_login");
     exit();
 }
 ?>
@@ -12,15 +19,20 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Penjualan</title>
+
+    <!-- CSS Bootstrap & Icons -->
     <link rel="stylesheet" href="/assets/css/bootstrap.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Script JS Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body class="bg-light">
 
     <div class="d-flex">
         
         <!-- Panggil Sidebar Offcanvas -->
-        <?php include 'sidebar.php'; ?>
+        <?php include __DIR__ . '/sidebar.php'; ?>
 
         <!-- Konten Sebelah Kanan -->
         <div class="flex-grow-1">
@@ -41,8 +53,3 @@ if (!isset($_SESSION['status']) || $_SESSION['status'] != "login") {
                     </div>
                 </div>
             </nav>
-        </div>
-    </div>
-    <script src="/assets/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>

@@ -3,28 +3,24 @@ include '../koneksi.php';
 
 /** @var mysqli $koneksi */
 
-if (isset($_GET['id'])) {
-    $id = mysqli_real_escape_string($koneksi, $_GET['id']);
+$id = mysqli_real_escape_string($koneksi, $_GET['id'] ?? '');
 
-    // Mencegah hapus jika data tinggal 1 (opsional/opsi keamanan sederhana)
-    $cek_total = mysqli_query($koneksi, "SELECT COUNT(*) as total FROM user");
-    $row = mysqli_fetch_assoc($cek_total);
-
-    if ($row['total'] <= 1) {
-        echo "<script>alert('User tidak bisa dihapus karena tersisa 1 user di sistem!'); window.location.href='user.php';</script>";
-        exit();
+if (!empty($id)) {
+    // 1. Kembalikan stok produk sebelum item transaksi dihapus (Opsional tapi disarankan)
+    $q_detail = mysqli_query($koneksi, "SELECT * FROM detail_penjualan WHERE penjualanID='$id'");
+    while ($item = mysqli_fetch_assoc($q_detail)) {
+        $pid = $item['produkID'];
+        $qty = $item['jumlah'];
+        mysqli_query($koneksi, "UPDATE produk SET stok = stok + $qty WHERE produkID='$pid'");
     }
 
-    // Query Hapus
-    $delete = mysqli_query($koneksi, "DELETE FROM user WHERE userID = '$id'");
+    // 2. Hapus detail item penjualan
+    mysqli_query($koneksi, "DELETE FROM detail_penjualan WHERE penjualanID='$id'");
 
-    if ($delete) {
-        echo "<script>alert('User berhasil dihapus!'); window.location.href='user.php';</script>";
-    } else {
-        echo "<script>alert('Gagal menghapus user: " . mysqli_error($koneksi) . "'); window.location.href='user.php';</script>";
-    }
-} else {
-    header("Location: user.php");
-    exit();
+    // 3. Hapus data utama penjualan
+    mysqli_query($koneksi, "DELETE FROM penjualan WHERE penjualanID='$id'");
 }
+
+// Redirect kembali ke halaman daftar penjualan
+echo "<script>alert('Transaksi berhasil dihapus dan stok telah dikembalikan.'); window.location.href='penjualan.php';</script>";
 ?>

@@ -3,19 +3,14 @@ include '../koneksi.php';
 
 /** @var mysqli $koneksi */
 
-// Ambil ID dari URL dan bersihkan karakter '#'
 $id = isset($_GET['id']) ? str_replace('#', '', $_GET['id']) : '';
 
-// Query mengambil data dari tabel penjualan dan pelanggan
+// Query data utama penjualan
 $sql = "
-    SELECT 
-        p.penjualanID, 
-        p.tanggal_penjualan, 
-        p.total_harga, 
-        p.nama_produk,
-        pel.nama_pelanggan
+    SELECT p.*, pel.nama_pelanggan, u.nama_user AS nama_kasir
     FROM penjualan p
     LEFT JOIN pelanggan pel ON p.pelangganID = pel.pelangganID 
+    LEFT JOIN user u ON p.userID = u.userID
     WHERE p.penjualanID = '$id'
 ";
 
@@ -26,9 +21,19 @@ if (!$penjualan) {
     echo "Data transaksi tidak ditemukan.";
     exit();
 }
+
+// Query rincian item transaksi
+$sql_detail = "
+    SELECT dp.*, pr.nama_produk, pr.harga 
+    FROM detail_penjualan dp
+    LEFT JOIN produk pr ON dp.produkID = pr.produkID
+    WHERE dp.penjualanID = '$id'
+";
+$query_detail = mysqli_query($koneksi, $sql_detail);
 ?>
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,30 +44,44 @@ if (!$penjualan) {
             font-size: 12px;
             color: #000;
         }
+
         body {
             width: 78mm;
             margin: 0 auto;
             padding: 10px;
         }
-        .text-center { text-align: center; }
-        .bold { font-weight: bold; }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
         .line {
             border-bottom: 1px dashed #000;
             margin: 8px 0;
         }
+
         .flex-between {
             display: flex;
             justify-content: space-between;
         }
+
         @media print {
             @page {
                 size: 80mm auto;
                 margin: 0;
             }
-            body { padding: 5mm; }
+
+            body {
+                padding: 5mm;
+            }
         }
     </style>
 </head>
+
 <body onload="window.print()">
 
     <!-- Header Struk -->
@@ -80,12 +99,12 @@ if (!$penjualan) {
         <span>#TRX-<?= str_pad($penjualan['penjualanID'], 4, '0', STR_PAD_LEFT); ?></span>
     </div>
     <div class="flex-between">
-        <span>Tgl       :</span>
-        <span><?= date('d-m-Y H:i:s', strtotime($penjualan['tanggal_penjualan'])); ?></span>
+        <span>Kasir :</span>
+        <span><?= htmlspecialchars($penjualan['nama_kasir'] ?? 'Admin'); ?></span>
     </div>
     <div class="flex-between">
-        <span>Kasir     :</span>
-        <span>Admin</span>
+        <span>Tgl :</span>
+        <span><?= date('d-m-Y H:i', strtotime($penjualan['tanggal_penjualan'])); ?></span>
     </div>
     <div class="flex-between">
         <span>Pelanggan :</span>
@@ -93,32 +112,52 @@ if (!$penjualan) {
             <?= !empty($penjualan['nama_pelanggan']) ? strtoupper(htmlspecialchars($penjualan['nama_pelanggan'])) : 'UMUM'; ?>
         </span>
     </div>
-
-    <div class="line"></div>
-
-    <!-- Daftar Barang -->
-    <div style="margin-bottom: 4px;" class="bold">
-        <?= !empty($penjualan['nama_produk']) ? htmlspecialchars($penjualan['nama_produk']) : 'Item Penjualan'; ?>
-    </div>
     <div class="flex-between">
-        <span>1 x Rp <?= number_format($penjualan['total_harga'], 0, ',', '.'); ?></span>
-        <span>Rp <?= number_format($penjualan['total_harga'], 0, ',', '.'); ?></span>
+        <span>Metode :</span>
+        <span><?= htmlspecialchars($penjualan['metode_pembayaran'] ?? 'Cash'); ?></span>
     </div>
 
     <div class="line"></div>
 
-    <!-- Rincian Pembayaran -->
+    <!-- Loop Daftar Barang -->
+    <?php
+    if ($query_detail && mysqli_num_rows($query_detail) > 0) {
+        while ($item = mysqli_fetch_assoc($query_detail)) {
+            $harga_satuan = $item['jumlah'] > 0 ? ($item['subtotal'] / $item['jumlah']) : 0;
+    ?>
+            <div style="margin-top: 4px;" class="bold">
+                <?= htmlspecialchars($item['nama_produk'] ?? 'Item'); ?>
+            </div>
+            <div class="flex-between">
+                <span><?= $item['jumlah']; ?> x Rp <?= number_format($harga_satuan, 0, ',', '.'); ?></span>
+                <span>Rp <?= number_format($item['subtotal'], 0, ',', '.'); ?></span>
+            </div>
+    <?php
+        }
+    }
+    ?>
+
+    <div class="line"></div>
+
+    <!-- Rincian Total & Pembayaran -->
+    <?php if (!empty($penjualan['diskon']) && $penjualan['diskon'] > 0): ?>
+        <div class="flex-between">
+            <span>DISKON</span>
+            <span>- Rp <?= number_format($penjualan['diskon'], 0, ',', '.'); ?></span>
+        </div>
+    <?php endif; ?>
+
     <div class="flex-between bold" style="font-size: 13px;">
-        <span>TOTAL BAYAR</span>
+        <span>TOTAL</span>
         <span>Rp <?= number_format($penjualan['total_harga'], 0, ',', '.'); ?></span>
     </div>
     <div class="flex-between">
-        <span>TUNAI</span>
-        <span>Rp <?= number_format($penjualan['total_harga'], 0, ',', '.'); ?></span>
+        <span>BAYAR</span>
+        <span>Rp <?= number_format($penjualan['bayar'] ?? 0, 0, ',', '.'); ?></span>
     </div>
     <div class="flex-between">
         <span>KEMBALI</span>
-        <span>Rp 0</span>
+        <span>Rp <?= number_format($penjualan['kembalian'] ?? 0, 0, ',', '.'); ?></span>
     </div>
 
     <div class="line"></div>
@@ -131,4 +170,5 @@ if (!$penjualan) {
     </div>
 
 </body>
+
 </html>
