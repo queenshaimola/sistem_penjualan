@@ -86,7 +86,7 @@ $query_detail = mysqli_query($koneksi, $sql_detail);
 
     <!-- Header Struk -->
     <div class="text-center">
-        <h2 class="bold" style="font-size: 15px; margin: 0;">OLA MINIMARKET CIHUY 6767</h2>
+        <h2 class="bold" style="font-size: 15px; margin: 0;">Slice Of Joy!</h2>
         <p style="margin: 2px 0;">Jl. Raya Six Seven No. 67</p>
         <p style="margin: 2px 0;">Telp: 0812-3456-7890</p>
     </div>

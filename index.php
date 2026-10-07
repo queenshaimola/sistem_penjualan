@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Penjualan - SMKN 3 Kendal</title>
+    <title>Sistem Penjualan</title>
     <!-- Bootstrap 5 CSS -->
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.css">
 </head>

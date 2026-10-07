@@ -117,9 +117,6 @@ $data = mysqli_query($koneksi, $query);
             <a href="laporan_cetak.php?tgl_mulai=<?= $tgl_mulai; ?>&tgl_sampai=<?= $tgl_sampai; ?>&search=<?= $search; ?>" target="_blank" class="btn btn-outline-danger btn-sm fw-semibold me-1">
                 <i class="bi bi-file-earmark-pdf me-1"></i> Cetak PDF
             </a>
-            <a href="laporan_excel.php?tgl_mulai=<?= $tgl_mulai; ?>&tgl_sampai=<?= $tgl_sampai; ?>&search=<?= $search; ?>" target="_blank" class="btn btn-outline-success btn-sm fw-semibold">
-                <i class="bi bi-file-earmark-excel me-1"></i> Export Excel
-            </a>
         </div>
     </div>
 
